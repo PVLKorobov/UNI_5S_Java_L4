@@ -4,6 +4,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.FileNotFoundException;
@@ -13,22 +14,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /// Main data reader class
-/// Provides methods
+/// Provides methods to build csv reader and parse data to list
 public class DataReader {
     // Class methods
-    /// Class constructor
-    /// @throws FileNotFoundException when csv file is missing
+    /// Class constructors
     public DataReader(String filePath) throws IOException {
-        csvReader = new CSVReaderBuilder(new FileReader(filePath))
-                .withCSVParser(new CSVParserBuilder()
-                        .withSeparator(';')
-                        .build())
-                .build();
-        csvReader.skip(1);
+        fileNameCache = filePath;
     }
 
+    /// Person list getter
+    /// Parses dataset to list of Person objects
+    /// @return ArrayList of Person objects
     public ArrayList<Person> getPersonList() throws CsvValidationException, IOException {
         ArrayList<Person> personsList = new ArrayList<>();
+        CSVReader csvReader = buildReader();
 
         String[] nextRow;
         while ((nextRow = csvReader.readNext()) != null) {
@@ -44,10 +43,33 @@ public class DataReader {
 
         return personsList;
     }
+
+    /// Rows count getter
+    /// @return int - amount of rows in the file excluding column names
+    /// @throws FileNotFoundException when csv file is missing
+    public int getRowsCount() throws IOException, CsvException {
+        CSVReader csvReader = buildReader();
+        return csvReader.readAll().size();
+    }
+
+
+    /// Reader builder method
+    /// Builds a reader object pointing to the second line of the file with ';' as separator
+    /// @return built CSVReader object, skipping the first line of column names in the csv file
+    /// @throws FileNotFoundException when csv file is missing
+    private CSVReader buildReader() throws FileNotFoundException {
+        return new CSVReaderBuilder(new FileReader(fileNameCache))
+                .withCSVParser(new CSVParserBuilder()
+                        .withSeparator(';')
+                        .build())
+                .withSkipLines(1)
+                .build();
+    }
     //
 
 
     // Class members
-    CSVReader csvReader;
+    /// File name given at initialization
+    private String fileNameCache;
     //
 }
