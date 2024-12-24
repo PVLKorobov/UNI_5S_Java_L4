@@ -32,6 +32,19 @@ public class Division {
     static public Division getExisting(char divisionName) {
         return existingDivision.get(divisionName);
     }
+
+    /// Id getter
+    /// @return long - division ID
+    public long getId() {
+        return id;
+    }
+
+
+    /// toString override
+    /// @return String representation of the object
+    public String toString() {
+        return "| " + "ID: " + id + "; Name: " + name + " |";
+    }
     //
 
 
