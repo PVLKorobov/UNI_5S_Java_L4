@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /// DataReader test class
@@ -19,8 +20,8 @@ public class DataReaderTest {
     /// Expects a list of Person type objects with members of correct type
     /// @throws FileNotFoundException if file is not found
     @Test
-    public void peopleDataTest() throws IOException, CsvException {
-        DataReader dataReader = new DataReader(System.getProperty("user.dir") + "\\test data\\foreign_names.csv");
+    public void peopleDataTest() throws IOException, CsvException, URISyntaxException {
+        DataReader dataReader = new DataReader("foreign_names.csv");
         ArrayList<Person> resultList = dataReader.getPersonList();
         for (Person person : resultList) {
             System.out.println(person + " -- " + person.getDivisionRef());
