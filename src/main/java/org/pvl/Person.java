@@ -1,7 +1,5 @@
 package org.pvl;
 
-import java.util.Date;
-
 /// Person class
 /// Holds info about a person
 public class Person {
