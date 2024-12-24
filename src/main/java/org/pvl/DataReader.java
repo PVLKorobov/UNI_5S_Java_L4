@@ -6,9 +6,12 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /// Main data reader class
@@ -16,8 +19,8 @@ import java.util.ArrayList;
 public class DataReader {
     // Class methods
     /// Class constructors
-    public DataReader(String filePath) throws IOException {
-        fileNameCache = filePath;
+    public DataReader(String resourceName) throws IOException, URISyntaxException {
+        fileResourceURI = getClass().getClassLoader().getResource(resourceName).toURI();
     }
 
     /// Person list getter
@@ -56,7 +59,7 @@ public class DataReader {
     /// @return built CSVReader object, skipping the first line of column names in the csv file
     /// @throws FileNotFoundException when csv file is missing
     private CSVReader buildReader() throws FileNotFoundException {
-        return new CSVReaderBuilder(new FileReader(fileNameCache))
+        return new CSVReaderBuilder(new FileReader(new File(fileResourceURI)))
                 .withCSVParser(new CSVParserBuilder()
                         .withSeparator(';')
                         .build())
@@ -68,6 +71,6 @@ public class DataReader {
 
     // Class members
     /// File name given at initialization
-    private String fileNameCache;
+    private URI fileResourceURI;
     //
 }
